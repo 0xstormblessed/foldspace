@@ -61,7 +61,7 @@ contract FoldSpaceTest is TestUtils {
         uint256 minterPk = bound(_minterPk, 1, 255);
         address minter = vm.addr(minterPk);
         uint256 deadline = _boundDeadline(_deadline);
-        uint256 fidRegistrationPrice = IBundler(BUNDLER).price(1);
+        uint256 fidRegistrationPrice = foldSpace.price();
         uint256 nextFid = idRegistry.idCounter() + 1;
 
         uint256 balanceBefore = 1 ether + fidRegistrationPrice;
@@ -107,7 +107,7 @@ contract FoldSpaceTest is TestUtils {
         uint256 recipientPk = bound(_recipientPk, 1, 255);
         uint256 deadline = _boundDeadline(_deadline);
         address recipient = vm.addr(recipientPk);
-        uint256 fidRegistrationPrice = IBundler(BUNDLER).price(1);
+        uint256 fidRegistrationPrice = foldSpace.price();
         uint256 nextFid = idRegistry.idCounter() + 1;
         bytes memory signature;
         address minter = vm.addr(minterPk);
@@ -161,7 +161,7 @@ contract FoldSpaceTest is TestUtils {
         uint256 recipientPk = bound(_recipientPk, 1, 255);
         uint256 deadline = _boundDeadline(_deadline);
         address recipient = vm.addr(recipientPk);
-        uint256 fidRegistrationPrice = IBundler(BUNDLER).price(1);
+        uint256 fidRegistrationPrice = foldSpace.price();
         uint256 nextFid = idRegistry.idCounter() + 1;
         bytes memory signature;
         address minter;
@@ -213,7 +213,7 @@ contract FoldSpaceTest is TestUtils {
         uint256 deadline = _boundDeadline(_deadline);
         uint256 minting = bound(_minting, 2, 10);
 
-        uint256 fidRegistrationPrice = IBundler(BUNDLER).price(1);
+        uint256 fidRegistrationPrice = foldSpace.price();
 
         uint256 balanceBefore = 1 ether + fidRegistrationPrice;
         deal(minter, balanceBefore);
@@ -244,7 +244,7 @@ contract FoldSpaceTest is TestUtils {
         uint256 minterPk = bound(_minterPk, 1, 255);
         address minter = vm.addr(minterPk);
         uint256 deadline = _boundDeadline(_deadline);
-        uint256 fidRegistrationPrice = IBundler(BUNDLER).price(1);
+        uint256 fidRegistrationPrice = foldSpace.price();
         uint256 nextFid = idRegistry.idCounter() + 1;
 
         uint256 balanceBefore = 1 ether + fidRegistrationPrice;
@@ -276,7 +276,7 @@ contract FoldSpaceTest is TestUtils {
         uint256 minterPk = bound(_minterPk, 1, 255);
         address minter = vm.addr(minterPk);
         uint256 deadline = _boundDeadline(_deadline);
-        uint256 fidRegistrationPrice = IBundler(BUNDLER).price(1);
+        uint256 fidRegistrationPrice = foldSpace.price();
         uint256 nextFid = idRegistry.idCounter() + 1;
 
         uint256 balanceBefore = 1 ether + fidRegistrationPrice;
