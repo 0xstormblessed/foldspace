@@ -1,6 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
+/**
+
+      ___         ___                        _____          ___           ___         ___           ___           ___              
+     /  /\       /  /\                      /  /::\        /  /\         /  /\       /  /\         /  /\         /  /\             
+    /  /:/_     /  /::\                    /  /:/\:\      /  /:/_       /  /::\     /  /::\       /  /:/        /  /:/_            
+   /  /:/ /\   /  /:/\:\    ___     ___   /  /:/  \:\    /  /:/ /\     /  /:/\:\   /  /:/\:\     /  /:/        /  /:/ /\           
+  /  /:/ /:/  /  /:/  \:\  /__/\   /  /\ /__/:/ \__\:|  /  /:/ /::\   /  /:/~/:/  /  /:/~/::\   /  /:/  ___   /  /:/ /:/_          
+ /__/:/ /:/  /__/:/ \__\:\ \  \:\ /  /:/ \  \:\ /  /:/ /__/:/ /:/\:\ /__/:/ /:/  /__/:/ /:/\:\ /__/:/  /  /\ /__/:/ /:/ /\         
+ \  \:\/:/   \  \:\ /  /:/  \  \:\  /:/   \  \:\  /:/  \  \:\/:/~/:/ \  \:\/:/   \  \:\/:/__\/ \  \:\ /  /:/ \  \:\/:/ /:/         
+  \  \::/     \  \:\  /:/    \  \:\/:/     \  \:\/:/    \  \::/ /:/   \  \::/     \  \::/       \  \:\  /:/   \  \::/ /:/          
+   \  \:\      \  \:\/:/      \  \::/       \  \::/      \__\/ /:/     \  \:\      \  \:\        \  \:\/:/     \  \:\/:/           
+    \  \:\      \  \::/        \__\/         \__\/         /__/:/       \  \:\      \  \:\        \  \::/       \  \::/            
+     \__\/       \__\/                                     \__\/         \__\/       \__\/         \__\/         \__\/             
+
+ */
+
+/// @notice FoldSpace is an NFT contract for registering Farcaster Ids.
+/// @notice Minting a FoldSpace NFT registers a Farcaster Id that you can claim or gift.
+/// @notice Compatible with IdGateway Version 2023.11.15;
+/// @author storming0x
+
 // OpenZeppelin Contracts (last updated v5.0.0) (interfaces/IERC1271.sol)
 
 /**
@@ -13,7 +34,10 @@ interface IERC1271 {
      * @param hash      Hash of the data to be signed
      * @param signature Signature byte array associated with _data
      */
-    function isValidSignature(bytes32 hash, bytes memory signature) external view returns (bytes4 magicValue);
+    function isValidSignature(
+        bytes32 hash,
+        bytes memory signature
+    ) external view returns (bytes4 magicValue);
 }
 
 // OpenZeppelin Contracts (last updated v5.0.0) (interfaces/draft-IERC6093.sol)
@@ -29,7 +53,11 @@ interface IERC20Errors {
      * @param balance Current balance for the interacting account.
      * @param needed Minimum amount required to perform a transfer.
      */
-    error ERC20InsufficientBalance(address sender, uint256 balance, uint256 needed);
+    error ERC20InsufficientBalance(
+        address sender,
+        uint256 balance,
+        uint256 needed
+    );
 
     /**
      * @dev Indicates a failure with the token `sender`. Used in transfers.
@@ -49,7 +77,11 @@ interface IERC20Errors {
      * @param allowance Amount of tokens a `spender` is allowed to operate with.
      * @param needed Minimum amount required to perform a transfer.
      */
-    error ERC20InsufficientAllowance(address spender, uint256 allowance, uint256 needed);
+    error ERC20InsufficientAllowance(
+        address spender,
+        uint256 allowance,
+        uint256 needed
+    );
 
     /**
      * @dev Indicates a failure with the `approver` of a token to be approved. Used in approvals.
@@ -134,7 +166,12 @@ interface IERC1155Errors {
      * @param needed Minimum amount required to perform a transfer.
      * @param tokenId Identifier number of a token.
      */
-    error ERC1155InsufficientBalance(address sender, uint256 balance, uint256 needed, uint256 tokenId);
+    error ERC1155InsufficientBalance(
+        address sender,
+        uint256 balance,
+        uint256 needed,
+        uint256 tokenId
+    );
 
     /**
      * @dev Indicates a failure with the token `sender`. Used in transfers.
@@ -249,7 +286,8 @@ abstract contract Initializable {
     }
 
     // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Initializable")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant INITIALIZABLE_STORAGE = 0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
+    bytes32 private constant INITIALIZABLE_STORAGE =
+        0xf0c57e16840df040f15088dc2f81fe391c3923bec73e23a9662efc9c229c6a00;
 
     /**
      * @dev The contract is already initialized.
@@ -395,7 +433,11 @@ abstract contract Initializable {
      * @dev Returns a pointer to the storage namespace.
      */
     // solhint-disable-next-line var-name-mixedcase
-    function _getInitializableStorage() private pure returns (InitializableStorage storage $) {
+    function _getInitializableStorage()
+        private
+        pure
+        returns (InitializableStorage storage $)
+    {
         assembly {
             $.slot := INITIALIZABLE_STORAGE
         }
@@ -495,7 +537,11 @@ library Create2 {
      * - the factory must have a balance of at least `amount`.
      * - if `amount` is non-zero, `bytecode` must have a `payable` constructor.
      */
-    function deploy(uint256 amount, bytes32 salt, bytes memory bytecode) internal returns (address addr) {
+    function deploy(
+        uint256 amount,
+        bytes32 salt,
+        bytes memory bytecode
+    ) internal returns (address addr) {
         if (address(this).balance < amount) {
             revert Create2InsufficientBalance(address(this).balance, amount);
         }
@@ -515,7 +561,10 @@ library Create2 {
      * @dev Returns the address where a contract will be stored if deployed via {deploy}. Any change in the
      * `bytecodeHash` or `salt` will result in a new destination address.
      */
-    function computeAddress(bytes32 salt, bytes32 bytecodeHash) internal view returns (address) {
+    function computeAddress(
+        bytes32 salt,
+        bytes32 bytecodeHash
+    ) internal view returns (address) {
         return computeAddress(salt, bytecodeHash, address(this));
     }
 
@@ -523,7 +572,11 @@ library Create2 {
      * @dev Returns the address where a contract will be stored if deployed via {deploy} from a contract located at
      * `deployer`. If `deployer` is this contract's address, returns the same value as {computeAddress}.
      */
-    function computeAddress(bytes32 salt, bytes32 bytecodeHash, address deployer) internal pure returns (address addr) {
+    function computeAddress(
+        bytes32 salt,
+        bytes32 bytecodeHash,
+        address deployer
+    ) internal pure returns (address addr) {
         /// @solidity memory-safe-assembly
         assembly {
             let ptr := mload(0x40) // Get free memory pointer
@@ -600,7 +653,10 @@ library ECDSA {
      * - with https://web3js.readthedocs.io/en/v1.3.4/web3-eth-accounts.html#sign[Web3.js]
      * - with https://docs.ethers.io/v5/api/signer/#Signer-signMessage[ethers]
      */
-    function tryRecover(bytes32 hash, bytes memory signature) internal pure returns (address, RecoverError, bytes32) {
+    function tryRecover(
+        bytes32 hash,
+        bytes memory signature
+    ) internal pure returns (address, RecoverError, bytes32) {
         if (signature.length == 65) {
             bytes32 r;
             bytes32 s;
@@ -615,7 +671,11 @@ library ECDSA {
             }
             return tryRecover(hash, v, r, s);
         } else {
-            return (address(0), RecoverError.InvalidSignatureLength, bytes32(signature.length));
+            return (
+                address(0),
+                RecoverError.InvalidSignatureLength,
+                bytes32(signature.length)
+            );
         }
     }
 
@@ -633,8 +693,14 @@ library ECDSA {
      * this is by receiving a hash of the original message (which may otherwise
      * be too long), and then calling {MessageHashUtils-toEthSignedMessageHash} on it.
      */
-    function recover(bytes32 hash, bytes memory signature) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, signature);
+    function recover(
+        bytes32 hash,
+        bytes memory signature
+    ) internal pure returns (address) {
+        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(
+            hash,
+            signature
+        );
         _throwError(error, errorArg);
         return recovered;
     }
@@ -644,9 +710,16 @@ library ECDSA {
      *
      * See https://eips.ethereum.org/EIPS/eip-2098[EIP-2098 short signatures]
      */
-    function tryRecover(bytes32 hash, bytes32 r, bytes32 vs) internal pure returns (address, RecoverError, bytes32) {
+    function tryRecover(
+        bytes32 hash,
+        bytes32 r,
+        bytes32 vs
+    ) internal pure returns (address, RecoverError, bytes32) {
         unchecked {
-            bytes32 s = vs & bytes32(0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);
+            bytes32 s = vs &
+                bytes32(
+                    0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+                );
             // We do not check for an overflow here since the shift operation results in 0 or 1.
             uint8 v = uint8((uint256(vs) >> 255) + 27);
             return tryRecover(hash, v, r, s);
@@ -656,8 +729,16 @@ library ECDSA {
     /**
      * @dev Overload of {ECDSA-recover} that receives the `r and `vs` short-signature fields separately.
      */
-    function recover(bytes32 hash, bytes32 r, bytes32 vs) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, r, vs);
+    function recover(
+        bytes32 hash,
+        bytes32 r,
+        bytes32 vs
+    ) internal pure returns (address) {
+        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(
+            hash,
+            r,
+            vs
+        );
         _throwError(error, errorArg);
         return recovered;
     }
@@ -681,7 +762,10 @@ library ECDSA {
         // with 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 - s1 and flip v from 27 to 28 or
         // vice versa. If your library also generates signatures with 0/1 for v instead 27/28, add 27 to v to accept
         // these malleable signatures as well.
-        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) {
+        if (
+            uint256(s) >
+            0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0
+        ) {
             return (address(0), RecoverError.InvalidSignatureS, s);
         }
 
@@ -698,8 +782,18 @@ library ECDSA {
      * @dev Overload of {ECDSA-recover} that receives the `v`,
      * `r` and `s` signature fields separately.
      */
-    function recover(bytes32 hash, uint8 v, bytes32 r, bytes32 s) internal pure returns (address) {
-        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, v, r, s);
+    function recover(
+        bytes32 hash,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) internal pure returns (address) {
+        (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(
+            hash,
+            v,
+            r,
+            s
+        );
         _throwError(error, errorArg);
         return recovered;
     }
@@ -764,7 +858,10 @@ library Math {
     /**
      * @dev Returns the addition of two unsigned integers, with an overflow flag.
      */
-    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function tryAdd(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             uint256 c = a + b;
             if (c < a) return (false, 0);
@@ -775,7 +872,10 @@ library Math {
     /**
      * @dev Returns the subtraction of two unsigned integers, with an overflow flag.
      */
-    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function trySub(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             if (b > a) return (false, 0);
             return (true, a - b);
@@ -785,7 +885,10 @@ library Math {
     /**
      * @dev Returns the multiplication of two unsigned integers, with an overflow flag.
      */
-    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function tryMul(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
             // benefit is lost if 'b' is also tested.
@@ -800,7 +903,10 @@ library Math {
     /**
      * @dev Returns the division of two unsigned integers, with a division by zero flag.
      */
-    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function tryDiv(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             if (b == 0) return (false, 0);
             return (true, a / b);
@@ -810,7 +916,10 @@ library Math {
     /**
      * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.
      */
-    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {
+    function tryMod(
+        uint256 a,
+        uint256 b
+    ) internal pure returns (bool, uint256) {
         unchecked {
             if (b == 0) return (false, 0);
             return (true, a % b);
@@ -862,7 +971,11 @@ library Math {
      * @dev Original credit to Remco Bloemen under MIT license (https://xn--2-umb.com/21/muldiv) with further edits by
      * Uniswap Labs also under MIT license.
      */
-    function mulDiv(uint256 x, uint256 y, uint256 denominator) internal pure returns (uint256 result) {
+    function mulDiv(
+        uint256 x,
+        uint256 y,
+        uint256 denominator
+    ) internal pure returns (uint256 result) {
         unchecked {
             // 512-bit multiply [prod1 prod0] = x * y. Compute the product mod 2^256 and mod 2^256 - 1, then use
             // use the Chinese Remainder Theorem to reconstruct the 512 bit result. The result is stored in two 256
@@ -946,7 +1059,12 @@ library Math {
     /**
      * @notice Calculates x * y / denominator with full precision, following the selected rounding direction.
      */
-    function mulDiv(uint256 x, uint256 y, uint256 denominator, Rounding rounding) internal pure returns (uint256) {
+    function mulDiv(
+        uint256 x,
+        uint256 y,
+        uint256 denominator,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         uint256 result = mulDiv(x, y, denominator);
         if (unsignedRoundsUp(rounding) && mulmod(x, y, denominator) > 0) {
             result += 1;
@@ -996,10 +1114,15 @@ library Math {
     /**
      * @notice Calculates sqrt(a), following the selected rounding direction.
      */
-    function sqrt(uint256 a, Rounding rounding) internal pure returns (uint256) {
+    function sqrt(
+        uint256 a,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         unchecked {
             uint256 result = sqrt(a);
-            return result + (unsignedRoundsUp(rounding) && result * result < a ? 1 : 0);
+            return
+                result +
+                (unsignedRoundsUp(rounding) && result * result < a ? 1 : 0);
         }
     }
 
@@ -1049,10 +1172,15 @@ library Math {
      * @dev Return the log in base 2, following the selected rounding direction, of a positive value.
      * Returns 0 if given 0.
      */
-    function log2(uint256 value, Rounding rounding) internal pure returns (uint256) {
+    function log2(
+        uint256 value,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         unchecked {
             uint256 result = log2(value);
-            return result + (unsignedRoundsUp(rounding) && 1 << result < value ? 1 : 0);
+            return
+                result +
+                (unsignedRoundsUp(rounding) && 1 << result < value ? 1 : 0);
         }
     }
 
@@ -1098,10 +1226,15 @@ library Math {
      * @dev Return the log in base 10, following the selected rounding direction, of a positive value.
      * Returns 0 if given 0.
      */
-    function log10(uint256 value, Rounding rounding) internal pure returns (uint256) {
+    function log10(
+        uint256 value,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         unchecked {
             uint256 result = log10(value);
-            return result + (unsignedRoundsUp(rounding) && 10 ** result < value ? 1 : 0);
+            return
+                result +
+                (unsignedRoundsUp(rounding) && 10 ** result < value ? 1 : 0);
         }
     }
 
@@ -1141,10 +1274,19 @@ library Math {
      * @dev Return the log in base 256, following the selected rounding direction, of a positive value.
      * Returns 0 if given 0.
      */
-    function log256(uint256 value, Rounding rounding) internal pure returns (uint256) {
+    function log256(
+        uint256 value,
+        Rounding rounding
+    ) internal pure returns (uint256) {
         unchecked {
             uint256 result = log256(value);
-            return result + (unsignedRoundsUp(rounding) && 1 << (result << 3) < value ? 1 : 0);
+            return
+                result +
+                (
+                    unsignedRoundsUp(rounding) && 1 << (result << 3) < value
+                        ? 1
+                        : 0
+                );
         }
     }
 
@@ -1670,7 +1812,10 @@ abstract contract Ownable is Context {
      */
     error OwnableInvalidOwner(address owner);
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
 
     /**
      * @dev Initializes the contract setting the address provided by the deployer as the initial owner.
@@ -1748,17 +1893,29 @@ interface IERC721 is IERC165 {
     /**
      * @dev Emitted when `tokenId` token is transferred from `from` to `to`.
      */
-    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Transfer(
+        address indexed from,
+        address indexed to,
+        uint256 indexed tokenId
+    );
 
     /**
      * @dev Emitted when `owner` enables `approved` to manage the `tokenId` token.
      */
-    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event Approval(
+        address indexed owner,
+        address indexed approved,
+        uint256 indexed tokenId
+    );
 
     /**
      * @dev Emitted when `owner` enables or disables (`approved`) `operator` to manage all of its assets.
      */
-    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+    event ApprovalForAll(
+        address indexed owner,
+        address indexed operator,
+        bool approved
+    );
 
     /**
      * @dev Returns the number of tokens in ``owner``'s account.
@@ -1788,7 +1945,12 @@ interface IERC721 is IERC165 {
      *
      * Emits a {Transfer} event.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes calldata data
+    ) external;
 
     /**
      * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients
@@ -1806,7 +1968,11 @@ interface IERC721 is IERC165 {
      *
      * Emits a {Transfer} event.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
 
     /**
      * @dev Transfers `tokenId` token from `from` to `to`.
@@ -1860,14 +2026,19 @@ interface IERC721 is IERC165 {
      *
      * - `tokenId` must exist.
      */
-    function getApproved(uint256 tokenId) external view returns (address operator);
+    function getApproved(
+        uint256 tokenId
+    ) external view returns (address operator);
 
     /**
      * @dev Returns if the `operator` is allowed to manage all of the assets of `owner`.
      *
      * See {setApprovalForAll}
      */
-    function isApprovedForAll(address owner, address operator) external view returns (bool);
+    function isApprovedForAll(
+        address owner,
+        address operator
+    ) external view returns (bool);
 }
 
 // OpenZeppelin Contracts (last updated v5.0.0) (utils/introspection/ERC165.sol)
@@ -1888,7 +2059,9 @@ abstract contract ERC165 is IERC165 {
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual returns (bool) {
         return interfaceId == type(IERC165).interfaceId;
     }
 }
@@ -2076,7 +2249,10 @@ interface IERC721Enumerable is IERC721 {
      * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
      * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
      */
-    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256);
+    function tokenOfOwnerByIndex(
+        address owner,
+        uint256 index
+    ) external view returns (uint256);
 
     /**
      * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
@@ -2150,8 +2326,14 @@ library Strings {
     /**
      * @dev Converts a `int256` to its ASCII `string` decimal representation.
      */
-    function toStringSigned(int256 value) internal pure returns (string memory) {
-        return string.concat(value < 0 ? "-" : "", toString(SignedMath.abs(value)));
+    function toStringSigned(
+        int256 value
+    ) internal pure returns (string memory) {
+        return
+            string.concat(
+                value < 0 ? "-" : "",
+                toString(SignedMath.abs(value))
+            );
     }
 
     /**
@@ -2166,7 +2348,10 @@ library Strings {
     /**
      * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.
      */
-    function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {
+    function toHexString(
+        uint256 value,
+        uint256 length
+    ) internal pure returns (string memory) {
         uint256 localValue = value;
         bytes memory buffer = new bytes(2 * length + 2);
         buffer[0] = "0";
@@ -2192,8 +2377,13 @@ library Strings {
     /**
      * @dev Returns true if the two strings are equal.
      */
-    function equal(string memory a, string memory b) internal pure returns (bool) {
-        return bytes(a).length == bytes(b).length && keccak256(bytes(a)) == keccak256(bytes(b));
+    function equal(
+        string memory a,
+        string memory b
+    ) internal pure returns (bool) {
+        return
+            bytes(a).length == bytes(b).length &&
+            keccak256(bytes(a)) == keccak256(bytes(b));
     }
 }
 
@@ -2212,8 +2402,15 @@ library SignatureChecker {
      * NOTE: Unlike ECDSA signatures, contract signatures are revocable, and the outcome of this function can thus
      * change through time. It could return true at block N and false at block N+1 (or the opposite).
      */
-    function isValidSignatureNow(address signer, bytes32 hash, bytes memory signature) internal view returns (bool) {
-        (address recovered, ECDSA.RecoverError error, ) = ECDSA.tryRecover(hash, signature);
+    function isValidSignatureNow(
+        address signer,
+        bytes32 hash,
+        bytes memory signature
+    ) internal view returns (bool) {
+        (address recovered, ECDSA.RecoverError error, ) = ECDSA.tryRecover(
+            hash,
+            signature
+        );
         return
             (error == ECDSA.RecoverError.NoError && recovered == signer) ||
             isValidERC1271SignatureNow(signer, hash, signature);
@@ -2236,7 +2433,8 @@ library SignatureChecker {
         );
         return (success &&
             result.length >= 32 &&
-            abi.decode(result, (bytes32)) == bytes32(IERC1271.isValidSignature.selector));
+            abi.decode(result, (bytes32)) ==
+            bytes32(IERC1271.isValidSignature.selector));
     }
 }
 
@@ -2247,7 +2445,13 @@ library SignatureChecker {
  * the Metadata extension, but not including the Enumerable extension, which is available separately as
  * {ERC721Enumerable}.
  */
-abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Errors {
+abstract contract ERC721 is
+    Context,
+    ERC165,
+    IERC721,
+    IERC721Metadata,
+    IERC721Errors
+{
     using Strings for uint256;
 
     // Token name
@@ -2262,7 +2466,8 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
 
     mapping(uint256 tokenId => address) private _tokenApprovals;
 
-    mapping(address owner => mapping(address operator => bool)) private _operatorApprovals;
+    mapping(address owner => mapping(address operator => bool))
+        private _operatorApprovals;
 
     /**
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
@@ -2275,7 +2480,9 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC165, IERC165) returns (bool) {
         return
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC721Metadata).interfaceId ||
@@ -2316,11 +2523,16 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
-    function tokenURI(uint256 tokenId) public view virtual returns (string memory) {
+    function tokenURI(
+        uint256 tokenId
+    ) public view virtual returns (string memory) {
         _requireOwned(tokenId);
 
         string memory baseURI = _baseURI();
-        return bytes(baseURI).length > 0 ? string.concat(baseURI, tokenId.toString()) : "";
+        return
+            bytes(baseURI).length > 0
+                ? string.concat(baseURI, tokenId.toString())
+                : "";
     }
 
     /**
@@ -2342,7 +2554,9 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
     /**
      * @dev See {IERC721-getApproved}.
      */
-    function getApproved(uint256 tokenId) public view virtual returns (address) {
+    function getApproved(
+        uint256 tokenId
+    ) public view virtual returns (address) {
         _requireOwned(tokenId);
 
         return _getApproved(tokenId);
@@ -2358,14 +2572,21 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
     /**
      * @dev See {IERC721-isApprovedForAll}.
      */
-    function isApprovedForAll(address owner, address operator) public view virtual returns (bool) {
+    function isApprovedForAll(
+        address owner,
+        address operator
+    ) public view virtual returns (bool) {
         return _operatorApprovals[owner][operator];
     }
 
     /**
      * @dev See {IERC721-transferFrom}.
      */
-    function transferFrom(address from, address to, uint256 tokenId) public virtual {
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public virtual {
         if (to == address(0)) {
             revert ERC721InvalidReceiver(address(0));
         }
@@ -2380,14 +2601,23 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
     /**
      * @dev See {IERC721-safeTransferFrom}.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) public {
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public {
         safeTransferFrom(from, to, tokenId, "");
     }
 
     /**
      * @dev See {IERC721-safeTransferFrom}.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public virtual {
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) public virtual {
         transferFrom(from, to, tokenId);
         _checkOnERC721Received(from, to, tokenId, data);
     }
@@ -2407,7 +2637,9 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
     /**
      * @dev Returns the approved address for `tokenId`. Returns 0 if `tokenId` is not minted.
      */
-    function _getApproved(uint256 tokenId) internal view virtual returns (address) {
+    function _getApproved(
+        uint256 tokenId
+    ) internal view virtual returns (address) {
         return _tokenApprovals[tokenId];
     }
 
@@ -2418,10 +2650,16 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
      * WARNING: This function assumes that `owner` is the actual owner of `tokenId` and does not verify this
      * assumption.
      */
-    function _isAuthorized(address owner, address spender, uint256 tokenId) internal view virtual returns (bool) {
+    function _isAuthorized(
+        address owner,
+        address spender,
+        uint256 tokenId
+    ) internal view virtual returns (bool) {
         return
             spender != address(0) &&
-            (owner == spender || isApprovedForAll(owner, spender) || _getApproved(tokenId) == spender);
+            (owner == spender ||
+                isApprovedForAll(owner, spender) ||
+                _getApproved(tokenId) == spender);
     }
 
     /**
@@ -2432,7 +2670,11 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
      * WARNING: This function assumes that `owner` is the actual owner of `tokenId` and does not verify this
      * assumption.
      */
-    function _checkAuthorized(address owner, address spender, uint256 tokenId) internal view virtual {
+    function _checkAuthorized(
+        address owner,
+        address spender,
+        uint256 tokenId
+    ) internal view virtual {
         if (!_isAuthorized(owner, spender, tokenId)) {
             if (owner == address(0)) {
                 revert ERC721NonexistentToken(tokenId);
@@ -2469,7 +2711,11 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
      *
      * NOTE: If overriding this function in a way that tracks balances, see also {_increaseBalance}.
      */
-    function _update(address to, uint256 tokenId, address auth) internal virtual returns (address) {
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal virtual returns (address) {
         address from = _ownerOf(tokenId);
 
         // Perform (optional) operator check
@@ -2540,7 +2786,11 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
      * @dev Same as {xref-ERC721-_safeMint-address-uint256-}[`_safeMint`], with an additional `data` parameter which is
      * forwarded in {IERC721Receiver-onERC721Received} to contract recipients.
      */
-    function _safeMint(address to, uint256 tokenId, bytes memory data) internal virtual {
+    function _safeMint(
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) internal virtual {
         _mint(to, tokenId);
         _checkOnERC721Received(address(0), to, tokenId, data);
     }
@@ -2613,7 +2863,12 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
      * @dev Same as {xref-ERC721-_safeTransfer-address-address-uint256-}[`_safeTransfer`], with an additional `data` parameter which is
      * forwarded in {IERC721Receiver-onERC721Received} to contract recipients.
      */
-    function _safeTransfer(address from, address to, uint256 tokenId, bytes memory data) internal virtual {
+    function _safeTransfer(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) internal virtual {
         _transfer(from, to, tokenId);
         _checkOnERC721Received(from, to, tokenId, data);
     }
@@ -2636,13 +2891,22 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
      * @dev Variant of `_approve` with an optional flag to enable or disable the {Approval} event. The event is not
      * emitted in the context of transfers.
      */
-    function _approve(address to, uint256 tokenId, address auth, bool emitEvent) internal virtual {
+    function _approve(
+        address to,
+        uint256 tokenId,
+        address auth,
+        bool emitEvent
+    ) internal virtual {
         // Avoid reading the owner unless necessary
         if (emitEvent || auth != address(0)) {
             address owner = _requireOwned(tokenId);
 
             // We do not use _isAuthorized because single-token approvals should not be able to call approve
-            if (auth != address(0) && owner != auth && !isApprovedForAll(owner, auth)) {
+            if (
+                auth != address(0) &&
+                owner != auth &&
+                !isApprovedForAll(owner, auth)
+            ) {
                 revert ERC721InvalidApprover(auth);
             }
 
@@ -2662,7 +2926,11 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
      *
      * Emits an {ApprovalForAll} event.
      */
-    function _setApprovalForAll(address owner, address operator, bool approved) internal virtual {
+    function _setApprovalForAll(
+        address owner,
+        address operator,
+        bool approved
+    ) internal virtual {
         if (operator == address(0)) {
             revert ERC721InvalidOperator(operator);
         }
@@ -2693,9 +2961,21 @@ abstract contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Er
      * @param tokenId uint256 ID of the token to be transferred
      * @param data bytes optional data to send along with the call
      */
-    function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory data) private {
+    function _checkOnERC721Received(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) private {
         if (to.code.length > 0) {
-            try IERC721Receiver(to).onERC721Received(_msgSender(), from, tokenId, data) returns (bytes4 retval) {
+            try
+                IERC721Receiver(to).onERC721Received(
+                    _msgSender(),
+                    from,
+                    tokenId,
+                    data
+                )
+            returns (bytes4 retval) {
                 if (retval != IERC721Receiver.onERC721Received.selector) {
                     revert ERC721InvalidReceiver(to);
                 }
@@ -2854,7 +3134,8 @@ contract ProxyFid is Initializable, IERC1271 {
  * interfere with enumerability and should not be used together with `ERC721Enumerable`.
  */
 abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
-    mapping(address owner => mapping(uint256 index => uint256)) private _ownedTokens;
+    mapping(address owner => mapping(uint256 index => uint256))
+        private _ownedTokens;
     mapping(uint256 tokenId => uint256) private _ownedTokensIndex;
 
     uint256[] private _allTokens;
@@ -2875,14 +3156,21 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165, ERC721) returns (bool) {
-        return interfaceId == type(IERC721Enumerable).interfaceId || super.supportsInterface(interfaceId);
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(IERC165, ERC721) returns (bool) {
+        return
+            interfaceId == type(IERC721Enumerable).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
 
     /**
      * @dev See {IERC721Enumerable-tokenOfOwnerByIndex}.
      */
-    function tokenOfOwnerByIndex(address owner, uint256 index) public view virtual returns (uint256) {
+    function tokenOfOwnerByIndex(
+        address owner,
+        uint256 index
+    ) public view virtual returns (uint256) {
         if (index >= balanceOf(owner)) {
             revert ERC721OutOfBoundsIndex(owner, index);
         }
@@ -2909,7 +3197,11 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     /**
      * @dev See {ERC721-_update}.
      */
-    function _update(address to, uint256 tokenId, address auth) internal virtual override returns (address) {
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal virtual override returns (address) {
         address previousOwner = super._update(to, tokenId, auth);
 
         if (previousOwner == address(0)) {
@@ -2954,7 +3246,10 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
      * @param from address representing the previous owner of the given token ID
      * @param tokenId uint256 ID of the token to be removed from the tokens list of the given address
      */
-    function _removeTokenFromOwnerEnumeration(address from, uint256 tokenId) private {
+    function _removeTokenFromOwnerEnumeration(
+        address from,
+        uint256 tokenId
+    ) private {
         // To prevent a gap in from's tokens array, we store the last token in the index of the token to delete, and
         // then delete the last slot (swap and pop).
 
@@ -3002,34 +3297,16 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     /**
      * See {ERC721-_increaseBalance}. We need that to account tokens that were minted in batch
      */
-    function _increaseBalance(address account, uint128 amount) internal virtual override {
+    function _increaseBalance(
+        address account,
+        uint128 amount
+    ) internal virtual override {
         if (amount > 0) {
             revert ERC721EnumerableForbiddenBatchMint();
         }
         super._increaseBalance(account, amount);
     }
 }
-
-/**
-
-      ___         ___                        _____          ___           ___         ___           ___           ___              
-     /  /\       /  /\                      /  /::\        /  /\         /  /\       /  /\         /  /\         /  /\             
-    /  /:/_     /  /::\                    /  /:/\:\      /  /:/_       /  /::\     /  /::\       /  /:/        /  /:/_            
-   /  /:/ /\   /  /:/\:\    ___     ___   /  /:/  \:\    /  /:/ /\     /  /:/\:\   /  /:/\:\     /  /:/        /  /:/ /\           
-  /  /:/ /:/  /  /:/  \:\  /__/\   /  /\ /__/:/ \__\:|  /  /:/ /::\   /  /:/~/:/  /  /:/~/::\   /  /:/  ___   /  /:/ /:/_          
- /__/:/ /:/  /__/:/ \__\:\ \  \:\ /  /:/ \  \:\ /  /:/ /__/:/ /:/\:\ /__/:/ /:/  /__/:/ /:/\:\ /__/:/  /  /\ /__/:/ /:/ /\         
- \  \:\/:/   \  \:\ /  /:/  \  \:\  /:/   \  \:\  /:/  \  \:\/:/~/:/ \  \:\/:/   \  \:\/:/__\/ \  \:\ /  /:/ \  \:\/:/ /:/         
-  \  \::/     \  \:\  /:/    \  \:\/:/     \  \:\/:/    \  \::/ /:/   \  \::/     \  \::/       \  \:\  /:/   \  \::/ /:/          
-   \  \:\      \  \:\/:/      \  \::/       \  \::/      \__\/ /:/     \  \:\      \  \:\        \  \:\/:/     \  \:\/:/           
-    \  \:\      \  \::/        \__\/         \__\/         /__/:/       \  \:\      \  \:\        \  \::/       \  \::/            
-     \__\/       \__\/                                     \__\/         \__\/       \__\/         \__\/         \__\/             
-
- */
-
-/// @notice FoldSpace is an NFT contract for registering Farcaster Ids.
-/// @notice Minting a FoldSpace NFT registers a Farcaster Id that you can claim or gift.
-/// @notice Compatible with IdGateway Version 2023.11.15;
-/// @author storming0x
 
 contract FoldSpace is IERC721Enumerable, ERC721Enumerable, Ownable {
     using TransferHelper for address;
